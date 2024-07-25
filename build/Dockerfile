@@ -47,8 +47,19 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-# Install guides
-RUN gem install guides -- --with-cflags=\"-O2 -pipe -march=native -w\"
+# Install Ruby 2.3 with RVM
+ENV PATH "/usr/local/rvm/bin:$PATH"
+ENV rvm_path "/usr/local/rvm"
+RUN curl -sSL https://rvm.io/mpapis.asc | gpg2 --import - \
+ && curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import - \
+ && curl -sSL https://get.rvm.io | bash \
+ && rvm pkg install openssl \
+ && rvm install --autolibs=disable 2.3 -C --with-openssl-dir=$rvm_path/usr
+
+# Install Guides
+ADD ./build/guides-wrapper.sh /usr/local/bin/guides
+RUN rvm-exec 2.3 gem install guides -- --with-cflags="-O2 -pipe -march=native -w" \
+ &&	chmod +x /usr/local/bin/guides
 
 # Add user
 # The ID / GID 10000 is used by the jenkinsci/slave Dockerfile and has to match here, because Jenkins
