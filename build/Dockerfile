@@ -38,18 +38,6 @@ RUN apt-get update \
 RUN sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
 	&& sudo chmod +x /usr/local/bin/docker-compose
 
-# # Install Java 7
-# RUN mkdir -p /usr/lib/jvm \
-# 	&& cd /usr/lib/jvm \
-# 	&& wget -nv -O jdk-7u80-linux-x64.tar.gz "https://filebox.apa-it.at/index.php/s/pjkOR2S6Z01MGtw/download" \
-# 	&& tar xfz jdk-7u80-linux-x64.tar.gz \
-# 	&& mv jdk1.7.0_80 java-7-oracle \
-# 	&& rm jdk-7u80-linux-x64.tar.gz \
-# 	&& rm /usr/lib/jvm/java-7-oracle/jre/lib/security/cacerts \
-# 	&& ln -s /etc/ssl/certs/java/cacerts /usr/lib/jvm/java-7-oracle/jre/lib/security/cacerts
-
-# ENV JAVA_1_7_HOME /usr/lib/jvm/java-7-oracle
-# ENV JAVA_1_8_HOME /usr/lib/jvm/java-8-openjdk-amd64
 ENV JAVA_HOME /usr/lib/jvm/java-17-amazon-corretto
 
 # Set the locale (needed for ruby guides)
@@ -59,8 +47,8 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-# # Install guides
-# RUN gem install guides -- --with-cflags=\"-O2 -pipe -march=native -w\"
+# Install guides
+RUN gem install guides -- --with-cflags=\"-O2 -pipe -march=native -w\"
 
 # Add user
 # The ID / GID 10000 is used by the jenkinsci/slave Dockerfile and has to match here, because Jenkins
