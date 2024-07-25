@@ -27,12 +27,11 @@ RUN apt-get update \
 		locales \
 		build-essential \
 		devscripts \
-		ruby \
-		ruby-dev \
 		zip \
 		unzip \
 		nmap \
-		bzip2
+		bzip2 \
+		procps
 
 # Install docker-compose
 RUN sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
