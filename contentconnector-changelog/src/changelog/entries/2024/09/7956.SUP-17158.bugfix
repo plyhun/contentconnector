@@ -1,0 +1,1 @@
+Some dependency libraries were updated to target security vulnerabilities: Apache Tika (1.28.1 -> 1.28.5), Apache POI (4.1.2 -> 5.2.2).

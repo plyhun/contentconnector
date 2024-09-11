@@ -9,7 +9,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
-import org.apache.poi.xssf.model.SharedStringsTable;
+import org.apache.poi.xssf.model.SharedStrings;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -70,7 +70,7 @@ public class XLSXContentTransformer extends ContentTransformer {
 			OPCPackage pkg = OPCPackage.open(is);
 
 			XSSFReader r = new XSSFReader(pkg);
-			SharedStringsTable sst = r.getSharedStringsTable();
+			SharedStrings sst = r.getSharedStringsTable();
 			SheetHandler handler = new SheetHandler(sst);
 
 			XMLReader parser = fetchSheetParser(handler);
@@ -114,7 +114,7 @@ public class XLSXContentTransformer extends ContentTransformer {
 	 * See org.xml.sax.helpers.DefaultHandler javadocs.
 	 */
 	private static class SheetHandler extends DefaultHandler {
-		private SharedStringsTable sst;
+		private SharedStrings sst;
 		private String lastContents;
 		private boolean nextIsString;
 
@@ -127,8 +127,8 @@ public class XLSXContentTransformer extends ContentTransformer {
 			buffer.append(str);
 		}
 
-		private SheetHandler(SharedStringsTable sst) {
-			this.sst = sst;
+		private SheetHandler(SharedStrings sst2) {
+			this.sst = sst2;
 		}
 
 		public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
@@ -154,7 +154,7 @@ public class XLSXContentTransformer extends ContentTransformer {
 			// Do now, as characters() may be called more than once
 			if (nextIsString && !"".equals(lastContents)) {
 				int idx = Integer.parseInt(lastContents);
-				lastContents = new XSSFRichTextString(sst.getEntryAt(idx)).toString();
+				lastContents = new XSSFRichTextString(sst.getItemAt(idx).getString()).toString();
 			}
 
 			// v => contents of a cell
